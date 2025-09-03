@@ -1,0 +1,535 @@
+/* --- START OF FILE style.css --- */
+
+/* --- Global Variables & Theming --- */
+/* :root pseudo-class targets the root element of the document (<html>). */
+/* Used here to define global CSS custom properties (variables). */
+:root {
+    /* -- Animation & Transition Timings -- */
+    --timing-fast: 0.2s; 
+    --timing-normal: 0.3s; 
+
+    /* -- Typography -- */
+    --font-primary: 'neue-haas-grotesk-text', sans-serif; 
+
+    /* -- Layout & Spacing -- */
+    /* Consistent edge padding */
+    --page-edge-padding: 70px; 
+
+    /* -- Default Dark Theme Color Palette -- */
+    /* These variables define the default dark theme. */
+    --bg-color: #0F0F0F; 
+    --text-color: #EAEAEA; 
+    --text-color-secondary: #A0A0A0; 
+    --panel-bg: rgba(20, 20, 20, 0); 
+    --button-bg: transparent;
+    --button-border: var(--text-color-secondary); 
+    --button-hover-bg: rgba(50, 50, 50, 0.7); 
+    --slider-track-bg: rgba(50, 50, 50, 0); 
+    --slider-fill-bg: var(--text-color); 
+    --slider-outline-color: var(--text-color-secondary); 
+    --icon-fill: var(--text-color); 
+    --popup-bg: rgba(15, 15, 15, 0.64); 
+    --popup-text: #ffffff; 
+
+}
+
+/* -- Light Theme Color Palette -- */
+/* Overrides for the light theme, applied when the body has the class 'theme--light'. */
+body.theme--light {
+    --bg-color: #F5F5F5; 
+    --text-color: #1A1A1A; 
+    --text-color-secondary: #505050; 
+    --panel-bg: rgba(240, 240, 240, 0); 
+    --button-border: var(--text-color-secondary); 
+    --button-hover-bg: rgba(220, 220, 220, 0.7); 
+    --slider-track-bg: rgba(210, 210, 210, 0); 
+    --slider-fill-bg: var(--text-color); 
+    --slider-outline-color: var(--text-color-secondary); 
+    --icon-fill: var(--text-color);
+    --popup-text: #000000; 
+}
+
+/* --- Base Styles --- */
+/* Basic styles applied to the body element. */
+body {
+    margin: 0; 
+    padding: 0; 
+    font-family: var(--font-primary); 
+    font-weight: 400; 
+    background-color: var(--bg-color); 
+    color: var(--text-color); 
+    overflow: hidden; 
+    transition: background-color var(--timing-normal), color var(--timing-normal); 
+}
+
+/* Styles for the main canvas container. */
+.canvas-container {
+    position: fixed; 
+    top: var(--page-edge-padding);
+    left: var(--page-edge-padding); 
+    width: calc(100vw - (2 * var(--page-edge-padding))); 
+    height: calc(100vh - (2 * var(--page-edge-padding))); 
+    z-index: 0;
+}
+
+/* --- UI Clusters --- */
+/* General styling for UI element groupings. */
+.ui-cluster {
+    position: fixed; 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    z-index: 20; 
+}
+
+/* Positioning for specific UI clusters. */
+/* UPDATED: Using CSS variable for edge padding */
+.ui-cluster--top-right { top: var(--page-edge-padding); right: var(--page-edge-padding); } 
+.ui-cluster--bottom-left { bottom: var(--page-edge-padding); left: var(--page-edge-padding); flex-direction: column; align-items: flex-start; gap: 18px;}
+.ui-cluster--bottom-right { bottom: var(--page-edge-padding); right: var(--page-edge-padding); }
+
+/* --- Button Component --- */
+/* Base styles for all buttons. */
+.button {
+    cursor: pointer; 
+    background-color: var(--button-bg); 
+    color: var(--text-color); 
+    border: 1px solid var(--button-border); 
+    transition: background-color var(--timing-fast), border-color var(--timing-fast), transform var(--timing-fast), box-shadow var(--timing-fast); /* ADDED: Smooth transitions for various properties, including box-shadow. */
+    font-family: var(--font-primary); 
+    padding: 12px 20px; 
+    font-size: 0.95rem; 
+    font-weight: 500; 
+    border-radius: 8px; 
+    line-height: 1.2; 
+}
+/* Styles for button hover state. */
+.button:hover {
+    background-color: var(--button-hover-bg); 
+    border-color: var(--text-color); 
+    transform: translateY(-2px); 
+}
+/* Styles for button active (pressed) state. */
+.button:active {
+    transform: translateY(0px); 
+}
+/* Styles for disabled button state. */
+.button:disabled {
+    opacity: 0.4; 
+    cursor: not-allowed; 
+    transform: none; 
+}
+/* Modifier for icon-only buttons. */
+.button--icon {
+    width: 48px; 
+    height: 48px; 
+    border-radius: 50%; 
+    padding: 0; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
+/* Styles for icons within buttons or standalone. */
+.icon {
+    width: 26px; 
+    height: 26px; 
+    fill: var(--icon-fill); 
+    transition: fill var(--timing-fast); 
+}
+
+/* --- Controls Panel --- */
+/* Wrapper for the controls panel trigger (e.g., a clickable link/button to open the panel). */
+.controls-trigger-wrapper {
+    position: fixed; 
+    top: var(--page-edge-padding); 
+    left: var(--page-edge-padding); 
+    z-index: 51; 
+    background-color: var(--panel-bg); 
+    backdrop-filter: blur(5px); 
+    border-radius: 10px 10px 0 0; 
+    width: 280px;
+    box-sizing: border-box; 
+    padding: 12px 18px; 
+    border: 1px solid var(--panel-border-internal); 
+    border-bottom: none; 
+}
+/* Style for the link/text inside the controls trigger. */
+.controls-trigger-wrapper__link {
+    color: var(--text-color); 
+    font-size: 1rem; 
+    text-decoration: none; 
+    cursor: pointer; 
+    display: block; 
+    font-weight: 500; 
+}
+/* Hover state for the trigger link. */
+.controls-trigger-wrapper__link:hover { opacity: 0.85; } 
+
+.controls-panel {
+    position: fixed; 
+    left: var(--page-edge-padding); 
+    width: 280px;
+    background-color: var(--panel-bg); 
+    backdrop-filter: blur(5px); 
+    border-radius: 0 0 10px 10px; 
+    padding: 20px 18px; 
+    z-index: 50; 
+    opacity: 0; 
+    visibility: hidden; 
+    transform: translateY(-15px); 
+    transition: opacity var(--timing-normal) ease-out, transform var(--timing-normal) ease-out, visibility 0s var(--timing-normal); /* Smooth transitions for appearance. Visibility transition is instant once opacity/transform are done. */
+    border: 1px solid var(--panel-border-internal); 
+    border-top: 1px dashed var(--panel-border-internal); /* Dashed top border to visually separate from trigger. */
+}
+/* Styles for when the controls panel is visible (aria-hidden="false"). */
+.controls-panel[aria-hidden="false"] {
+    opacity: 1; 
+    visibility: visible; 
+    transform: translateY(0); 
+    transition-delay: 0s, 0s, 0s; 
+}
+/* Spacing for slider containers within the panel. */
+.controls-panel__sliders-area .slider-container {
+    margin-bottom: 18px; 
+    margin-top: 0; 
+}
+/* Specific top margin for the first slider in the area. */
+.controls-panel__sliders-area .slider-container:first-child {
+    margin-top: 5px; 
+}
+/* Wrapper for slider label and its current value display. */
+.controls-panel__sliders-area .label-value-wrapper {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 8px; 
+    font-size: 0.9rem; 
+    color: var(--text-color-secondary); 
+    font-weight: 400; 
+}
+/* Styles for the element displaying the slider's current value. */
+.controls-panel__sliders-area .slider-value-display {
+    font-weight: 500; 
+    min-width: 35px; 
+    text-align: right; 
+    color: var(--text-color); 
+}
+/* Base styles for range input sliders. */
+.controls-panel__sliders-area input[type=range] {
+    -webkit-appearance: none; 
+    appearance: none; 
+    width: 100%; 
+    height: 20px; 
+    background: transparent;
+    cursor: pointer; 
+    padding: 0; margin: 0; 
+    outline: none; 
+    box-sizing: border-box; 
+}
+/* Styles for the slider track in WebKit browsers (Chrome, Safari). */
+.controls-panel__sliders-area input[type=range]::-webkit-slider-runnable-track {
+    width: 100%; height: 100%; 
+    background: var(--slider-track-bg); 
+    border: 1px solid var(--slider-outline-color); 
+    border-radius: 6px;
+    overflow: hidden; 
+}
+/* Styles for the slider thumb (draggable handle) in WebKit browsers. */
+.controls-panel__sliders-area input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; 
+    width: 6px; 
+    height: 100%; 
+    background: var(--slider-fill-bg); 
+}
+/* Styles for the slider track in Firefox. */
+.controls-panel__sliders-area input[type=range]::-moz-range-track {
+    width: 100%; height: 100%; 
+    background: var(--slider-track-bg); 
+    border: 1px solid var(--slider-outline-color); 
+    border-radius: 6px; 
+}
+/* Styles for the slider thumb in Firefox. */
+.controls-panel__sliders-area input[type=range]::-moz-range-thumb {
+    width: 6px; 
+    height: calc(100% - 2px);
+    background: var(--slider-fill-bg); 
+    border: none; border-radius: 0; 
+}
+/* Styles for the progress fill (part of the track before the thumb) in Firefox. */
+.controls-panel__sliders-area input[type=range]::-moz-range-progress {
+    background-color: var(--slider-fill-bg); 
+    height: calc(100% - 2px); 
+    border-radius: 5px;
+}
+
+/* Area for auto-animation controls (e.g., a checkbox). */
+.controls-panel__auto-animation-area {
+    margin-top: 20px; 
+    padding-top: 20px; 
+    border-top: 1px solid var(--panel-border-internal); 
+    font-size: 0.95rem; 
+    color: var(--text-color-secondary); 
+    display: flex; 
+    align-items: center; 
+}
+/* ADDED: Style for the checkbox input itself for better theme consistency. */
+.controls-panel__auto-animation-area input[type="checkbox"] {
+    margin-right: 8px; 
+    accent-color: var(--text-color); 
+}
+
+
+/* --- Instructions Text --- */
+/* Styling for general instruction text displayed on the UI. */
+.instructions-text {
+    font-size: 0.9rem; 
+    color: var(--text-color-secondary); 
+    line-height: 1.5; 
+    font-weight: 400; 
+}
+
+/* --- Info Popup --- */
+/* Styles for the main information popup container. */
+.info-popup {
+    position: fixed; 
+    top: calc(var(--page-edge-padding) - 20px);
+    left: calc(var(--page-edge-padding) - 20px);
+    width: calc(100vw - 2 * (var(--page-edge-padding) - 20px)); 
+    height: calc(100vh - 2 * (var(--page-edge-padding) - 20px)); 
+    backdrop-filter: blur(10px); 
+    z-index: 100; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    opacity: 0; 
+    visibility: hidden; 
+    transition: opacity var(--timing-normal) ease-out, visibility 0s var(--timing-normal); 
+    border-radius: 12px; 
+}
+/* Styles for when the info popup is visible (aria-hidden="false"). */
+.info-popup[aria-hidden="false"] {
+    opacity: 1; 
+    visibility: visible; 
+}
+
+/* Styles for the close button within the info popup. */
+.info-popup__close-button {
+    position: absolute; 
+    bottom: 20px; 
+    right: 20px;  
+    z-index: 105; 
+    background: var(--button-bg); 
+    border-color: var(--button-border); 
+}
+
+/* Styles for the icon inside the popup's close button. */
+.info-popup__close-button .icon {
+    fill: var(--icon-fill); 
+}
+
+
+/* Wrapper for the scrollable content within the info popup. */
+.info-popup__content-wrapper {
+    width: 100%; 
+    max-width: 760px; 
+    padding: 40px 30px;
+    padding-top: 70px;
+    overflow-y: auto;
+    max-height: 100%; 
+    justify-content: flex-start; 
+    align-items: center; 
+    text-align: center; 
+    position: relative;
+
+    /* Hide scrollbar for Firefox. */
+    scrollbar-width: none; /* Firefox */
+    /* Hide scrollbar for IE and Edge (legacy). */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+/* Hide scrollbar for Webkit browsers (Chrome, Safari). */
+.info-popup__content-wrapper::-webkit-scrollbar {
+    display: none; 
+}
+
+
+/* Container for the initial, large title in the popup. */
+.info-popup__initial-title-container {
+    margin-bottom: 40px; 
+}
+/* Individual words or parts of the initial title, allowing for animation or distinct styling. */
+.info-popup__initial-title-container .title-word {
+    display: inline-block; 
+    font-size: 3.6rem; 
+    line-height: 1.2; 
+    color: var(--popup-text);
+    font-weight: 700; 
+}
+
+/* Container for the secondary content area that appears after the initial title/animation. */
+.info-popup__secondary-content-container {
+    width: 100%; 
+    opacity: 1; 
+}
+
+/* A header block within the popup content, potentially intended to be sticky. */
+.info-popup__sticky-header {
+    padding-bottom: 60px; 
+    width: 100%; 
+    box-sizing: border-box; 
+}
+/* Main heading style within the popup content. */
+.info-popup__heading {
+    font-size: 2.5rem; 
+    line-height: 1.25; 
+    color: var(--popup-text); 
+    font-weight: 600; 
+    margin-bottom: 10px; 
+}
+/* Subheading style. */
+.info-popup__subheading {
+    font-size: 1.5rem; 
+    color: var(--popup-text); 
+    margin-bottom: 30px; 
+    font-weight: 600; 
+}
+/* Quote style. */
+.info-popup__quote {
+    font-size: 1.6rem; 
+    line-height: 1.5; 
+    color: var(--popup-text); 
+    font-weight: 500; 
+    margin-bottom: 15px; 
+    font-style: italic; 
+    padding: 0 10px; 
+}
+/* Attribution style for quotes. */
+.info-popup__attribution {
+    font-size: 0.8rem; 
+    color: var(--popup-text); 
+    margin-top: 20px; 
+    margin-bottom: 60px; 
+    padding: 0 200px; 
+    display: block; 
+}
+/* Paragraph style. */
+.info-popup__paragraph {
+    font-size: 1.1rem; 
+    line-height: 1.7; 
+    color: var(--popup-text); 
+    font-weight: 500; 
+    margin-top: 0; 
+    margin-bottom: 25px; 
+    padding: 0 10px; 
+    text-align: center; 
+}
+
+.info-popup__paragraph:last-child {
+    margin-bottom: 0; 
+}
+
+/* General block of content within the popup. */
+.info-popup__content-block {
+    opacity: 1; 
+    margin-bottom: 100px; 
+}
+
+/* Styling for an "action" text, similar to a quote but perhaps for calls to action or emphasis. */
+.info-popup__action{
+    font-size: 1.6rem; 
+    line-height: 1.5; 
+    color: var(--popup-text); 
+    font-weight: 500; 
+    margin-bottom: 100px; 
+    font-style: italic; 
+    padding: 0 10px; 
+}
+/* Removes bottom margin from the last content block in the popup. */
+.info-popup__content-block:last-child {
+    margin-bottom: 0; 
+}
+
+/* --- Scroll Animation for Popup Content --- */
+/* Class applied to elements that should animate into view on scroll. */
+.scroll-animate {
+    opacity: 0; 
+    transform: translateY(30px); 
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out; 
+    transition-delay: 0.1s; 
+}
+
+/* Class added (usually by JavaScript) when the element is in the viewport. */
+.scroll-animate.scroll-animate--in-view {
+    opacity: 1; 
+    transform: translateY(0); 
+}
+
+
+/* --- Credits Layout --- */
+/* Main container for the credits section, typically within the info popup. */
+.credits-layout {
+    width: auto; 
+    max-width: 1000px; 
+    margin: 30px auto 0 auto; 
+    text-align: left; 
+    justify-content: center; 
+    color: var(--popup-text); 
+    font-size: 0.9rem; 
+}
+
+/* A single section within the credits (e.g., "Design", "Development"). */
+.credits-section {
+    display: flex; 
+    align-items: flex-start; 
+    margin-bottom: 1.2em; 
+    gap: 400px; 
+}
+
+/* Title for a group of credits (e.g., "Built with", "Software Used"). */
+.credits-group-title {
+    font-weight: 600; 
+    margin: 0; 
+    line-height: 1.5; 
+    flex: 0 0 160px; 
+    word-wrap: break-word; 
+}
+
+/* Unordered list used for names or items within a credit group. */
+.credits-list {
+    list-style: none; 
+    padding-left: 0; 
+    margin: 0; 
+    line-height: 1.5; 
+    flex: 1 1 auto; 
+}
+
+/* Individual list item in a credits list. */
+.credits-list li {
+    margin-bottom: 0.3em; 
+}
+
+.credits-list li:last-child {
+    margin-bottom: 0;
+}
+
+/* Copyright notice at the end of the credits. */
+.credits-copyright {
+    font-size: 0.7rem; 
+    margin-top: 5em; 
+    line-height: 1.5; 
+    text-align: center; 
+}
+
+
+/* --- Screen Reader Only --- */
+/* Utility class to visually hide content but keep it accessible to screen readers. */
+.sr-only {
+  position: absolute; 
+  width: 1px; height: 1px; 
+  padding: 0; margin: -1px; 
+  overflow: hidden; 
+  clip: rect(0, 0, 0, 0); 
+  white-space: nowrap; 
+  border-width: 0; 
+}
+
+/* --- END OF FILE style.css --- */
